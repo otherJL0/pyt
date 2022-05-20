@@ -47,6 +47,7 @@ def init(directory: Optional[str] = typer.Argument(None)):
     files: dict[str, str] = {
         "config": str(Core()),
         "description": "Unnamed repository; edit this file 'description' to name the repository.",
+        "HEAD": "ref: refs/heads/master",
     }
 
     try:
