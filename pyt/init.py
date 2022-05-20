@@ -58,14 +58,14 @@ def init(directory: Optional[str] = typer.Argument(None)):
                 f.write(contents)
 
         message = typer.style(
-            f"Initialized empty Pyt repository in {typer.style(pyt_dir, underline=True)}",
+            f"Initialized empty Pyt repository in {typer.style(pyt_dir, underline=True)}/",
             fg=typer.colors.GREEN,
         )
     except FileExistsError:
         for dir in subdirectories:
             (pyt_dir / dir).mkdir(parents=True, exist_ok=True)
         message = typer.style(
-            f"Reinitialized existing Pyt repository in {typer.style(pyt_dir, underline=True)}",
+            f"Reinitialized existing Pyt repository in {typer.style(pyt_dir, underline=True)}/",
             fg=typer.colors.YELLOW,
         )
     typer.echo(message)
