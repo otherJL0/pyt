@@ -8,7 +8,7 @@ app = typer.Typer()
 
 
 @dataclass
-class GitConfigSegment:
+class PytConfigSegment:
     """Custom dataclass provides more control over configparser module"""
 
     segment_name: str = ""
@@ -28,40 +28,43 @@ class GitConfigSegment:
 
 
 @dataclass
-class Core(GitConfigSegment):
+class Core(PytConfigSegment):
     repositoryformatversion: int = 0
     filemode: bool = True
     bare: bool = False
     logallrefupdates: bool = True
 
 
-def generate_config(git_dir: Path) -> None:
-    config = Core()
-    with (git_dir / "config").open("w", encoding="utf-8") as gitconfig:
-        gitconfig.write(str(config))
-
-
 @app.callback(invoke_without_command=True)
 def init(directory: Optional[str] = typer.Argument(None)):
-    git_dir: Path = Path.cwd()
+    pyt_dir: Path = Path.cwd()
     if directory:
-        git_dir /= directory
-    git_dir /= ".git"
-    layout = ("objects", "refs", "hooks", "info")
+        pyt_dir /= directory
+    pyt_dir /= ".pyt"
+
+    # Contents of .pyt directory
+    subdirectories = ("objects", "refs", "hooks", "info")
+    files: dict[str, str] = {
+        "config": str(Core()),
+        "description": "Unnamed repository; edit this file 'description' to name the repository.",
+    }
 
     try:
-        for dir in layout:
-            (git_dir / dir).mkdir(parents=True, exist_ok=False)
-        generate_config(git_dir)
+        for dir in subdirectories:
+            (pyt_dir / dir).mkdir(parents=True, exist_ok=False)
+        for filename, contents in files.items():
+            with (pyt_dir / filename).open("w", encoding="utf-8") as f:
+                f.write(contents)
+
         message = typer.style(
-            f"Initialized empty Pyt repository in {typer.style(git_dir, underline=True)}",
+            f"Initialized empty Pyt repository in {typer.style(pyt_dir, underline=True)}",
             fg=typer.colors.GREEN,
         )
     except FileExistsError:
-        for dir in layout:
-            (git_dir / dir).mkdir(parents=True, exist_ok=True)
+        for dir in subdirectories:
+            (pyt_dir / dir).mkdir(parents=True, exist_ok=True)
         message = typer.style(
-            f"Reinitialized existing Pyt repository in {typer.style(git_dir, underline=True)}",
+            f"Reinitialized existing Pyt repository in {typer.style(pyt_dir, underline=True)}",
             fg=typer.colors.YELLOW,
         )
     typer.echo(message)
