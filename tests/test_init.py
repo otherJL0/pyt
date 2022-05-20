@@ -26,3 +26,14 @@ def test_pyt_init_existing_repo(tmp_path: Path):
         out.decode().strip()
         == f"Reinitialized existing Pyt repository in {tmp_path}/.pyt/"
     )
+
+
+def test_generate_identical_files(tmp_path: Path):
+    for tool in ("git", "pyt"):
+        _, _, exitcode = capture((tool, "init", str(tmp_path)))
+        assert exitcode == 0
+
+    pyt_dir = tmp_path / ".pyt"
+    git_dir = tmp_path / ".git"
+    for item in git_dir.iterdir():
+        assert (pyt_dir / item.name).exists()
