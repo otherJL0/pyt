@@ -9,6 +9,7 @@ def capture(command: tuple[str, ...]) -> tuple[bytes, bytes, int]:
 
 
 def test_pyt_init_new_repo(tmp_path: Path):
+    """Ensure new repo message matches `git init` message"""
     command = ("pyt", "init", str(tmp_path))
     out, _, exitcode = capture(command)
     assert exitcode == 0
@@ -18,6 +19,7 @@ def test_pyt_init_new_repo(tmp_path: Path):
 
 
 def test_pyt_init_existing_repo(tmp_path: Path):
+    """Ensure existing repo message matches `git init` message"""
     command = ("pyt", "init", str(tmp_path))
     capture(command)
     out, _, exitcode = capture(command)
@@ -29,6 +31,7 @@ def test_pyt_init_existing_repo(tmp_path: Path):
 
 
 def test_generate_identical_files(tmp_path: Path):
+    """Ensure initial `.pyt` directory matches initial `.git` directory"""
     for tool in ("git", "pyt"):
         _, _, exitcode = capture((tool, "init", str(tmp_path)))
         assert exitcode == 0
