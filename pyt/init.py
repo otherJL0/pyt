@@ -43,7 +43,7 @@ def init(directory: Optional[str] = typer.Argument(None)):
     pyt_dir /= ".pyt"
 
     # Contents of .pyt directory
-    subdirectories = ("objects", "refs", "hooks", "info")
+    subdirectories = ("objects", "refs", "hooks", "info", "branches")
     files: dict[str, str] = {
         "config": str(Core()),
         "description": "Unnamed repository; edit this file 'description' to name the repository.",

@@ -33,7 +33,10 @@ def test_generate_identical_files(tmp_path: Path):
         _, _, exitcode = capture((tool, "init", str(tmp_path)))
         assert exitcode == 0
 
-    pyt_dir = tmp_path / ".pyt"
-    git_dir = tmp_path / ".git"
-    for item in git_dir.iterdir():
-        assert (pyt_dir / item.name).exists()
+    pyt_dir = set(
+        item.relative_to(tmp_path / ".pyt") for item in (tmp_path / ".pyt").iterdir()
+    )
+    git_dir = set(
+        item.relative_to(tmp_path / ".git") for item in (tmp_path / ".git").iterdir()
+    )
+    assert pyt_dir == git_dir
